@@ -29,7 +29,7 @@ vim.g.have_nerd_font = true
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.mouse = "a"
-vim.o.showmode = false
+vim.o.showmode = true
 vim.schedule(function()
     vim.o.clipboard = "unnamedplus"
 end)
@@ -71,9 +71,8 @@ vim.keymap.set("n", "<c-c>", ":bd<enter>", { desc = "Close buffer" })
 
 -- vim.keymap.set("n", "<leader>t", ":split | terminal<enter>i", { desc = "Open terminal window" })
 vim.keymap.set("n", "<leader>t", ":ToggleTerm<enter>", { desc = "Toggle terminal window" })
+vim.keymap.set("t", "<esc>", "<c-\\><c-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "kj", "<c-\\><c-n>", { desc = "Exit terminal mode" })
-
-vim.keymap.set("n", "<leader>imodeline", "Govim: ts=4 sts=4 sw=4 et<esc>", { desc = "[I]nsert [modeline]" })
 
 -- [[ Basic Autocommands ]]
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -99,24 +98,10 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
+-- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
+-- Alternatively, use `config = function() ... end` for full control over the configuration.
 require("lazy").setup({
-    "NMAC427/guess-indent.nvim", -- Detect tabstop and shiftwidth automatically
-
-    -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-    -- Alternatively, use `config = function() ... end` for full control over the configuration.
-    --
-    { -- Adds git related signs to the gutter, as well as utilities for managing changes
-        "lewis6991/gitsigns.nvim",
-        opts = {
-            signs = {
-                add = { text = "+" },
-                change = { text = "~" },
-                delete = { text = "_" },
-                topdelete = { text = "‾" },
-                changedelete = { text = "~" },
-            },
-        },
-    },
+    { "NMAC427/guess-indent.nvim" }, -- Detect tabstop and shiftwidth automatically
     { -- Useful plugin to show you pending keybinds.
         "folke/which-key.nvim",
         event = "VimEnter",
@@ -162,11 +147,10 @@ require("lazy").setup({
                 { "<leader>r", group = "[R]e[N]ame" },
                 { "<leader>i", group = "[I]nsert" },
                 { "<leader>l", group = "[L]SP" },
-                -- { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+                { "<leader>a", group = "[A]vante AI" },
             },
         },
     },
-
     { -- Fuzzy Finder (files, lsp, etc)
         "nvim-telescope/telescope.nvim",
         event = "VimEnter",
@@ -234,8 +218,7 @@ require("lazy").setup({
             end, { desc = "[S]earch [N]eovim files" })
         end,
     },
-    -- LSP Plugins
-    {
+    { -- LSP Plugins
         "folke/lazydev.nvim",
         ft = "lua",
         opts = {
@@ -264,14 +247,14 @@ require("lazy").setup({
                     end
 
                     map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-                    map("<leader>ga", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+                    map("<c-]>", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+                    map("<leader>gd", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                     map("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
                     map("<leader>gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-                    map("<leader>gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-                    map("<leader>gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                     map("<leader>gt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
                     map("<leader>gs", require("telescope.builtin").lsp_document_symbols, "[G]oto [S]ymbols")
                     map("<leader>gw", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[G]oto [W]orkspace Symbols")
+                    map("<leader>ga", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 
                     -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
                     ---@param client vim.lsp.Client
@@ -399,7 +382,6 @@ require("lazy").setup({
             }
         end,
     },
-
     { -- Autoformat
         "stevearc/conform.nvim",
         event = { "BufWritePre" },
@@ -437,7 +419,6 @@ require("lazy").setup({
             },
         },
     },
-
     { -- Autocompletion
         "saghen/blink.cmp",
         event = "VimEnter",
@@ -483,11 +464,6 @@ require("lazy").setup({
                 -- 'enter' for enter to accept
                 -- 'none' for no mappings
                 --
-                -- For an understanding of why the 'default' preset is recommended,
-                -- you will need to read `:help ins-completion`
-                --
-                -- No, but seriously. Please read `:help ins-completion`, it is really good!
-                --
                 -- All presets have the following mappings:
                 -- <tab>/<s-tab>: move to right/left of your snippet expansion
                 -- <c-space>: Open menu or open docs if already open
@@ -513,7 +489,10 @@ require("lazy").setup({
             sources = {
                 default = { "lsp", "path", "snippets", "lazydev" },
                 providers = {
-                    lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+                    lazydev = {
+                        module = "lazydev.integrations.blink",
+                        score_offset = 100,
+                    },
                 },
             },
 
@@ -532,7 +511,6 @@ require("lazy").setup({
             signature = { enabled = true },
         },
     },
-
     {
         -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
         "folke/tokyonight.nvim",
@@ -548,45 +526,18 @@ require("lazy").setup({
             vim.cmd.colorscheme "tokyonight-night"
         end,
     },
-
-    -- Highlight todo, notes, etc in comments
-    { "folke/todo-comments.nvim", event = "VimEnter", dependencies = { "nvim-lua/plenary.nvim" }, opts = { signs = false } },
-
+    { -- Highlight todo, notes, etc in comments
+        "folke/todo-comments.nvim",
+        event = "VimEnter",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = { signs = false },
+    },
     { -- Collection of various small independent plugins/modules
         "echasnovski/mini.nvim",
         config = function()
-            -- Better Around/Inside textobjects
-            --
-            -- Examples:
-            --  - va)  - [V]isually select [A]round [)]paren
-            --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-            --  - ci'  - [C]hange [I]nside [']quote
-            require("mini.ai").setup { n_lines = 500 }
-
-            -- Add/delete/replace surroundings (brackets, quotes, etc.)
-            --
-            -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-            -- - sd'   - [S]urround [D]elete [']quotes
-            -- - sr)'  - [S]urround [R]eplace [)] [']
+            require("mini.ai").setup()
             require("mini.surround").setup()
-
-            -- Simple and easy statusline.
-            --  You could remove this setup call if you don't like it,
-            --  and try some other statusline plugin
-            local statusline = require "mini.statusline"
-            -- set use_icons to true if you have a Nerd Font
-            statusline.setup { use_icons = vim.g.have_nerd_font }
-
-            -- You can configure sections in the statusline by overriding their
-            -- default behavior. For example, here we set the section for
-            -- cursor location to LINE:COLUMN
-            ---@diagnostic disable-next-line: duplicate-set-field
-            statusline.section_location = function()
-                return "%2l:%-2v"
-            end
-
-            -- ... and there is more!
-            --  Check out: https://github.com/echasnovski/mini.nvim
+            require("mini.tabline").setup()
         end,
     },
     { -- Highlight, edit, and navigate code
@@ -615,10 +566,8 @@ require("lazy").setup({
     },
 
     -- require 'kickstart.plugins.debug',
-    -- require "kickstart.plugins.indent_line",
     require "kickstart.plugins.lint",
     require "kickstart.plugins.autopairs",
-    -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
     { import = "custom.plugins" },
 
