@@ -64,10 +64,13 @@ vim.keymap.set("n", "<c-u>", "<c-u>zz", { desc = "Center after jump up" })
 vim.keymap.set("n", "n", "nzz", { desc = "Center after next search" })
 vim.keymap.set("n", "N", "Nzz", { desc = "Center after previous search" })
 
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-vim.keymap.set("n", "<leader>e", ":Oil<enter>", { desc = "Open explorer" })
--- vim.keymap.set("n", "<leader>e", ":Exp<enter>", { desc = "Open explorer" })
 vim.keymap.set("n", "<c-c>", ":bd<enter>", { desc = "Close buffer" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+
+vim.keymap.set("n", "==", "gg=G<c-o>", { desc = "Format buffer" })
+
+-- vim.keymap.set("n", "-", ":Exp<enter>", { desc = "Open explorer" })
+vim.keymap.set("n", "-", ":Oil<enter>", { desc = "Open explorer" })
 
 -- vim.keymap.set("n", "<leader>t", ":split | terminal<enter>i", { desc = "Open terminal window" })
 vim.keymap.set("n", "<leader>t", ":ToggleTerm<enter>", { desc = "Toggle terminal window" })
@@ -247,7 +250,7 @@ require("lazy").setup({
                     end
 
                     map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-                    map("<c-]>", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+                    map("<c-]>", require("telescope.builtin").lsp_definitions, "Goto Definition")
                     map("<leader>gd", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                     map("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
                     map("<leader>gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
@@ -346,6 +349,13 @@ require("lazy").setup({
                         ".hpp",
                     },
                 },
+                glsl_analyzer = {
+                    filetypes = {
+                        ".vert",
+                        ".frag",
+                        ".comp",
+                    },
+                },
                 rust_analyzer = {},
                 lua_ls = {
                     settings = {
@@ -362,7 +372,6 @@ require("lazy").setup({
             local ensure_installed = vim.tbl_keys(servers or {})
             vim.list_extend(ensure_installed, {
                 "stylua",
-                "clang-format",
             })
             require("mason-tool-installer").setup { ensure_installed = ensure_installed }
 
@@ -386,22 +395,8 @@ require("lazy").setup({
         "stevearc/conform.nvim",
         event = { "BufWritePre" },
         cmd = { "ConformInfo" },
-        keys = {
-            {
-                "<leader>f",
-                function()
-                    require("conform").format { async = true, lsp_format = "fallback" }
-                end,
-                mode = "",
-                desc = "[F]ormat buffer",
-            },
-        },
         opts = {
-            notify_on_error = false,
-            format_on_save = function(bufnr)
-                -- Disable "format_on_save lsp_fallback" for languages that don't
-                -- have a well standardized coding style. You can add additional
-                -- languages here or re-enable it for the disabled ones.
+            format_after_save = function(bufnr)
                 local disable_filetypes = { c = true, cpp = true }
                 if disable_filetypes[vim.bo[bufnr].filetype] then
                     return nil
@@ -414,8 +409,6 @@ require("lazy").setup({
             end,
             formatters_by_ft = {
                 lua = { "stylua" },
-                c = { "clang-format" },
-                cpp = { "clang-format" },
             },
         },
     },
