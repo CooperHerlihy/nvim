@@ -54,6 +54,8 @@ vim.o.expandtab = true
 vim.o.hidden = true
 vim.o.path = vim.o.path .. "**"
 
+vim.cmd "set cc=120,180"
+
 -- [[ Basic Keymaps ]]
 vim.keymap.set("i", "kj", "<esc>", { desc = "Exit insert mode" })
 vim.keymap.set("i", "<enter>", "<enter><c-g>u", { desc = "Break insert mode for undo" })
@@ -66,8 +68,6 @@ vim.keymap.set("n", "N", "Nzz", { desc = "Center after previous search" })
 
 vim.keymap.set("n", "<c-c>", ":bd<enter>", { desc = "Close buffer" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-
-vim.keymap.set("n", "==", "gg=G<c-o>", { desc = "Format buffer" })
 
 -- vim.keymap.set("n", "-", ":Exp<enter>", { desc = "Open explorer" })
 vim.keymap.set("n", "-", ":Oil<enter>", { desc = "Open explorer" })
@@ -147,10 +147,6 @@ require("lazy").setup({
             spec = {
                 { "<leader>s", group = "[S]earch" },
                 { "<leader>g", group = "[G]oto" },
-                { "<leader>r", group = "[R]e[N]ame" },
-                { "<leader>i", group = "[I]nsert" },
-                { "<leader>l", group = "[L]SP" },
-                { "<leader>a", group = "[A]vante AI" },
             },
         },
     },
@@ -194,13 +190,13 @@ require("lazy").setup({
             vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
             vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
             vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
+            vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[S]earch [B]uffers" })
+            vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = "[S]earch Recent Files (\".\" for repeat)" })
             vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-            vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
             vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+            vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
             vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
             vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-            vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = "[S]earch Recent Files (\".\" for repeat)" })
-            vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
             vim.keymap.set("n", "<leader>/", function()
                 builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
@@ -249,12 +245,12 @@ require("lazy").setup({
                         vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
                     end
 
-                    map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+                    map("<leader>r", vim.lsp.buf.rename, "[R]ename")
                     map("<c-]>", require("telescope.builtin").lsp_definitions, "Goto Definition")
-                    map("<leader>gd", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-                    map("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-                    map("<leader>gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
                     map("<leader>gt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
+                    map("<leader>gd", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+                    map("<leader>gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+                    map("<leader>gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
                     map("<leader>gs", require("telescope.builtin").lsp_document_symbols, "[G]oto [S]ymbols")
                     map("<leader>gw", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[G]oto [W]orkspace Symbols")
                     map("<leader>ga", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
@@ -297,9 +293,9 @@ require("lazy").setup({
                     end
 
                     if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-                        map("<leader>lh", function()
+                        map("<leader>h", function()
                             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-                        end, "Toggle [L]SP Inlay [H]ints")
+                        end, "Toggle LSP Inlay [H]ints")
                     end
                 end,
             })
@@ -466,6 +462,8 @@ require("lazy").setup({
                 --
                 -- See :h blink-cmp-config-keymap for defining your own keymap
                 preset = "enter",
+                ["<tab>"] = {},
+                ["<s-tab>"] = {},
             },
 
             appearance = {
@@ -489,7 +487,7 @@ require("lazy").setup({
                 },
             },
 
-            snippets = { preset = "luasnip" },
+            -- snippets = { preset = "luasnip" },
 
             -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
             -- which automatically downloads a prebuilt binary when enabled.

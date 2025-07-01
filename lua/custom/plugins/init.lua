@@ -12,4 +12,8 @@ return {
             size = 20,
         },
     },
+    {
+        "supermaven-inc/supermaven-nvim",
+        opts = {},
+    },
 }
