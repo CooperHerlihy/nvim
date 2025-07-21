@@ -15,16 +15,16 @@ rtp:prepend(lazypath)
 require("lazy").setup({
     { -- TODO: Custom color scheme
         "custom-color",
-        dir = vim.fn.stdpath "config" .. "/lua/custom-color",
+        dir = vim.fn.stdpath "config" .. "/lua/custom/color",
         lazy = false,
         priority = 1000,
-        config = function()
-            vim.cmd.colorscheme "custom-color"
-        end,
     },
-    { -- AI autocompletion
-        "supermaven-inc/supermaven-nvim",
-        opts = {},
+    { -- TODO: Floating terminal
+        "custom-terminal",
+        dir = vim.fn.stdpath "config" .. "/lua/custom/terminal",
+        config = function()
+            require("custom.terminal.init").setup()
+        end,
     },
     { -- Terminal
         "akinsho/toggleterm.nvim",
@@ -39,11 +39,8 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = { signs = false },
     },
-    { -- File explorer
-        "stevearc/oil.nvim",
-        opts = {},
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        lazy = false,
+    { -- Detect tabstop and shiftwidth automatically
+        "NMAC427/guess-indent.nvim"
     },
     { -- Collection of various small independent plugins/modules
         "echasnovski/mini.nvim",
@@ -55,8 +52,15 @@ require("lazy").setup({
             require("mini.surround").setup()
         end,
     },
-    { -- Detect tabstop and shiftwidth automatically
-        "NMAC427/guess-indent.nvim"
+    { -- File explorer
+        "stevearc/oil.nvim",
+        opts = {},
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        lazy = false,
+    },
+    { -- AI autocompletion
+        "supermaven-inc/supermaven-nvim",
+        opts = {},
     },
     { -- Highlight, edit, and navigate code
         "nvim-treesitter/nvim-treesitter",

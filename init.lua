@@ -29,7 +29,9 @@ vim.g.have_nerd_font = true
 vim.opt.updatetime = 150
 vim.opt.timeoutlen = 500
 
-vim.schedule(function() vim.opt.clipboard = "unnamedplus" end)
+-- vim.schedule(function()
+    vim.opt.clipboard:append("unnamedplus")
+-- end)
 vim.opt.undofile = true
 vim.opt.confirm = true
 
@@ -73,6 +75,8 @@ map("<esc>", vim.cmd.nohlsearch)
 
 require("plugins")
 
+vim.cmd.colorscheme "custom-color"
+
 local oil = require("oil")
 map("-", oil.open)
 
@@ -83,26 +87,26 @@ local telescope = require("telescope.builtin")
 map("<leader>/", function()
     telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
 end)
-map("<leader>sr", telescope.resume)
-map("<leader>sf", telescope.find_files)
-map("<leader>s.", telescope.oldfiles)
+map("<leader>f", telescope.find_files)
+map("<leader>s.", telescope.resume)
+map("<leader>so", telescope.oldfiles)
 map("<leader>sb", telescope.buffers)
 map("<leader>sg", telescope.live_grep)
 map("<leader>sd", telescope.diagnostics)
 map("<leader>sh", telescope.help_tags)
 map("<leader>sk", telescope.keymaps)
-map("<leader>ss", telescope.builtin)
+map("<leader>st", telescope.builtin)
+map("<leader>sc", telescope.colorscheme)
 map("<leader>sn", function() telescope.find_files { cwd = vim.fn.stdpath "config" } end)
 
-map("gd", telescope.lsp_definitions)
 map("<leader>r", vim.lsp.buf.rename)
-map("<leader>gt", telescope.lsp_type_definitions)
+map("gd", telescope.lsp_definitions)
 map("<leader>gd", vim.lsp.buf.declaration)
 map("<leader>gi", telescope.lsp_implementations)
+map("<leader>gt", telescope.lsp_type_definitions)
 map("<leader>gr", telescope.lsp_references)
-map("<leader>gs", telescope.lsp_document_symbols)
-map("<leader>gw", telescope.lsp_dynamic_workspace_symbols)
 map("<leader>ga", vim.lsp.buf.code_action, { "n", "x" })
+-- "<leader>h" toggles LSP hints, if available
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
