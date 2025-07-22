@@ -137,4 +137,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+map("<leader>ot", vim.cmd.ObsidianTags, { desc = "Search Obsidian tags" })
+map("<leader>og", vim.cmd.ObsidianSearch, { desc = "Grep Obsidian notes" })
+map("<leader>oc", vim.cmd.ObsidianTOC, { desc = "Show Obsidian table of contents" })
+map("<leader>ol", vim.cmd.ObsidianLinks, { desc = "Show Obsidian links" })
+map("<leader>ob", vim.cmd.ObsidianBacklinks, { desc = "Show Obsidian backlinks" })
+map("<leader>or", vim.cmd.ObsidianRename, { desc = "Rename Obsidian note" })
+
 -- vim: ts=4 sts=4 sw=4 et
