@@ -23,7 +23,7 @@ require("lazy").setup({
         "custom-terminal",
         dir = vim.fn.stdpath "config" .. "/lua/custom/terminal",
         config = function()
-            require("custom.terminal.init").setup()
+            require("custom.terminal").setup()
         end,
     },
     { -- Terminal
@@ -39,18 +39,17 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = { signs = false },
     },
-    { -- Detect tabstop and shiftwidth automatically
-        "NMAC427/guess-indent.nvim"
-    },
     { -- Collection of various small independent plugins/modules
         "echasnovski/mini.nvim",
         config = function()
             require("mini.ai").setup()
-            require("mini.bracketed").setup()
             require("mini.comment").setup()
             require("mini.pairs").setup()
             require("mini.surround").setup()
         end,
+    },
+    { -- Git integration
+        "tpope/vim-fugitive",
     },
     { -- File explorer
         "stevearc/oil.nvim",
@@ -58,26 +57,49 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         lazy = false,
     },
-    { -- AI autocompletion
-        "supermaven-inc/supermaven-nvim",
-        opts = {},
+    {
+        "obsidian-nvim/obsidian.nvim",
+        version = "*",
+        lazy = true,
+        ft = "markdown",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+        },
+        ---@module 'obsidian'
+        ---@type obsidian.config
+        opts = {
+            workspaces = {
+                { name = "notes", path = "~/notes", },
+            },
+            completion = {
+                blink = true,
+                create_new = false,
+            },
+            picker = {
+                name = "telescope.nvim",
+                note_mappings = {},
+                tag_mappings = {},
+            },
+            ui = {
+                enable = true,
+                checkboxes = {
+                    [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+                    ["x"] = { char = "", hl_group = "ObsidianDone" },
+                },
+            },
+        },
+    },
+    { -- Detect tabstop and shiftwidth automatically
+        "NMAC427/guess-indent.nvim"
     },
     { -- Highlight, edit, and navigate code
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        main = "nvim-treesitter.configs", -- Sets main module to use for opts
+        main = "nvim-treesitter.configs",
         -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
         opts = {
-            ensure_installed = { "bash", "c", "cpp", "diff", "html", "lua", "luadoc", "markdown", "markdown_inline", "query", "vim", "vimdoc" },
             auto_install = true,
-            highlight = {
-                enable = true,
-                -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-                --  If you are experiencing weird indenting issues, add the language to
-                --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-                additional_vim_regex_highlighting = { "ruby" },
-            },
-            indent = { enable = true, disable = { "ruby" } },
+            highlight = { enable = true },
         },
         -- There are additional nvim-treesitter modules that you can use to interact
         -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -85,6 +107,14 @@ require("lazy").setup({
         --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
         --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
         --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    },
+    { -- AI autocompletion
+        "supermaven-inc/supermaven-nvim",
+        opts = {
+            ignore_filetypes = {
+                "markdown",
+            },
+        },
     },
     { -- Autocompletion
         "saghen/blink.cmp",
@@ -95,9 +125,20 @@ require("lazy").setup({
         --- @type blink.cmp.Config
         opts = {
             keymap = {
-                preset = "enter",
-                ["<tab>"] = {},
-                ["<s-tab>"] = {},
+                preset = "none",
+                ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+                ['<C-e>'] = { 'hide', 'fallback' },
+                ['<CR>'] = { 'accept', 'fallback' },
+
+                ['<Up>'] = { 'select_prev', 'fallback' },
+                ['<Down>'] = { 'select_next', 'fallback' },
+                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+
+                ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+                ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+
+                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
             },
 
             appearance = {
@@ -225,15 +266,10 @@ require("lazy").setup({
                         })
                     end
 
-                    local map_lsp = function(keys, func, desc, mode)
-                        mode = mode or "n"
-                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-                    end
-
                     if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-                        map_lsp("<leader>h", function()
+                        vim.keymap.set("n", "<leader>h", function()
                             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-                        end, "Toggle LSP Inlay [H]ints")
+                        end, { desc = "Toggle LSP inlay hints" })
                     end
                 end,
             })
@@ -274,7 +310,15 @@ require("lazy").setup({
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
             local servers = {
-                clangd = {},
+                clangd = {
+                    setting = {
+                        clangd = {
+                            diagnostics = {
+                                disable = { "-Wmissing-designated-field-initializers" }
+                            }
+                        }
+                    }
+                },
                 glsl_analyzer = {},
                 lua_ls = {
                     settings = {
@@ -289,9 +333,6 @@ require("lazy").setup({
             }
 
             local ensure_installed = vim.tbl_keys(servers or {})
-            vim.list_extend(ensure_installed, {
-                "stylua",
-            })
             require("mason-tool-installer").setup { ensure_installed = ensure_installed }
 
             require("mason-lspconfig").setup {
