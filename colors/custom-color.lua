@@ -1,1 +1,1 @@
-require("custom.color.init").load()
+require("custom.color").load()

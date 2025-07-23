@@ -13,13 +13,6 @@ rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 require("lazy").setup({
-    { -- Floating terminal
-        "custom-terminal",
-        dir = vim.fn.stdpath "config" .. "/lua/custom/terminal",
-        config = function()
-            require("custom.terminal").setup()
-        end,
-    },
     { -- File explorer
         "stevearc/oil.nvim",
         opts = {},
@@ -40,12 +33,6 @@ require("lazy").setup({
     },
     { -- Detect tabstop and shiftwidth automatically
         "NMAC427/guess-indent.nvim"
-    },
-    { -- TODO: Custom color scheme
-        "custom-color",
-        dir = vim.fn.stdpath "config" .. "/lua/custom/color",
-        lazy = false,
-        priority = 1000,
     },
     { -- Highlight todo, notes, etc in comments
         "folke/todo-comments.nvim",

@@ -1,13 +1,5 @@
 local M = {}
 
-function M.setup(opts)
-    opts = opts or {}
-
-    vim.api.nvim_create_user_command("ToggleTerminal", function()
-        M.toggle()
-    end, { desc = "Toggle terminal" })
-end
-
 local buffer = -1
 local window = -1
 

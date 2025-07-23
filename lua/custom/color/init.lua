@@ -1,9 +1,5 @@
 local M = {}
 
-function M.setup(opts)
-    opts = opts or {}
-end
-
 local palette = {
 }
 
@@ -25,7 +21,6 @@ function M.load()
     for group, hl in pairs(groups) do
         vim.api.nvim_set_hl(0, group, hl)
     end
-
 end
 
 return M
