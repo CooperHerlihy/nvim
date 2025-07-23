@@ -13,31 +13,18 @@ rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
 require("lazy").setup({
-    { -- TODO: Custom color scheme
-        "custom-color",
-        dir = vim.fn.stdpath "config" .. "/lua/custom/color",
-        lazy = false,
-        priority = 1000,
-    },
-    { -- TODO: Floating terminal
+    { -- Floating terminal
         "custom-terminal",
         dir = vim.fn.stdpath "config" .. "/lua/custom/terminal",
         config = function()
             require("custom.terminal").setup()
         end,
     },
-    { -- Terminal
-        "akinsho/toggleterm.nvim",
-        version = "*",
-        opts = {
-            size = 20,
-        },
-    },
-    { -- Highlight todo, notes, etc in comments
-        "folke/todo-comments.nvim",
-        event = "VimEnter",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        opts = { signs = false },
+    { -- File explorer
+        "stevearc/oil.nvim",
+        opts = {},
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        lazy = false,
     },
     { -- Collection of various small independent plugins/modules
         "echasnovski/mini.nvim",
@@ -51,39 +38,44 @@ require("lazy").setup({
     { -- Git integration
         "tpope/vim-fugitive",
     },
-    { -- File explorer
-        "stevearc/oil.nvim",
-        opts = {},
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        lazy = false,
-    },
-    -- {
-    --     "obsidian-nvim/obsidian.nvim",
-    --     version = "*",
-    --     lazy = true,
-    --     ft = "markdown",
-    --     dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-    --     ---@module 'obsidian'
-    --     ---@type obsidian.config
-    --     opts = {
-    --         workspaces = {
-    --             { name = "notes", path = "~/notes", },
-    --         },
-    --         picker = { name = "telescope.nvim", },
-    --         ui = {
-    --             enable = true,
-    --             checkboxes = {
-    --                 [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-    --                 ["x"] = { char = "", hl_group = "ObsidianDone" },
-    --             },
-    --         },
-    --         follow_url_func = function(url)
-    --             vim.ui.open(url)
-    --         end,
-    --     },
-    -- },
     { -- Detect tabstop and shiftwidth automatically
         "NMAC427/guess-indent.nvim"
+    },
+    { -- TODO: Custom color scheme
+        "custom-color",
+        dir = vim.fn.stdpath "config" .. "/lua/custom/color",
+        lazy = false,
+        priority = 1000,
+    },
+    { -- Highlight todo, notes, etc in comments
+        "folke/todo-comments.nvim",
+        event = "VimEnter",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = { signs = false },
+    },
+    {
+        'MeanderingProgrammer/render-markdown.nvim',
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        opts = {
+            render_modes = true,
+            heading = {
+                sign = false,
+                icons = { ' 󰲡  ', ' 󰲣  ', ' 󰲥  ', ' 󰲧  ', ' 󰲩  ', ' 󰲫  ' },
+                position = "inline",
+            },
+            pipe_table = {
+                preset = "double",
+                border_virtual = true,
+            },
+            indent = {
+                enabled = true,
+                per_level = 4,
+                skip_level = 0,
+                skip_heading = true,
+            },
+        },
     },
     { -- Highlight, edit, and navigate code
         "nvim-treesitter/nvim-treesitter",

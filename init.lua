@@ -100,8 +100,8 @@ require("plugins")
 
 vim.cmd.colorscheme "custom-color"
 
-local toggleterm = require("toggleterm")
-map("<leader>t", function() toggleterm.toggle(nil, 0, nil, nil, nil) end, { desc = "Toggle terminal" })
+local terminal = require("custom.terminal")
+map("<leader>t", function() terminal.toggle() end, { desc = "Toggle terminal" })
 
 local oil = require("oil")
 map("-", oil.open, { desc = "Open Oil file browser" })
@@ -132,6 +132,8 @@ end, { desc = "Search config files" })
 map("<leader>/", function()
     telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
 end, { desc = "Fuzzy find in current buffer" })
+
+map("<leader>m", function() vim.cmd("RenderMarkdown toggle") end, { desc = "Toggle markdown render" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
