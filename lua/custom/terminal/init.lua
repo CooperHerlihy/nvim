@@ -12,7 +12,9 @@ local buffer = -1
 local window = -1
 
 function M.toggle()
-    if not vim.api.nvim_win_is_valid(window) then
+    if vim.api.nvim_win_is_valid(window) then
+        vim.api.nvim_win_hide(window)
+    else
         if not vim.api.nvim_buf_is_valid(buffer) then
             buffer = vim.api.nvim_create_buf(false, true)
         end
@@ -31,9 +33,7 @@ function M.toggle()
             vim.cmd.term()
         end
 
-        vim.api.nvim_feedkeys("a", "n", false)
-    else
-        vim.api.nvim_win_hide(window)
+        vim.api.nvim_feedkeys("i", "n", false)
     end
 end
 
