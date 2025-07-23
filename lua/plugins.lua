@@ -57,38 +57,31 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         lazy = false,
     },
-    {
-        "obsidian-nvim/obsidian.nvim",
-        version = "*",
-        lazy = true,
-        ft = "markdown",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
-        ---@module 'obsidian'
-        ---@type obsidian.config
-        opts = {
-            workspaces = {
-                { name = "notes", path = "~/notes", },
-            },
-            completion = {
-                blink = true,
-                create_new = false,
-            },
-            picker = {
-                name = "telescope.nvim",
-                note_mappings = {},
-                tag_mappings = {},
-            },
-            ui = {
-                enable = true,
-                checkboxes = {
-                    [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-                    ["x"] = { char = "", hl_group = "ObsidianDone" },
-                },
-            },
-        },
-    },
+    -- {
+    --     "obsidian-nvim/obsidian.nvim",
+    --     version = "*",
+    --     lazy = true,
+    --     ft = "markdown",
+    --     dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+    --     ---@module 'obsidian'
+    --     ---@type obsidian.config
+    --     opts = {
+    --         workspaces = {
+    --             { name = "notes", path = "~/notes", },
+    --         },
+    --         picker = { name = "telescope.nvim", },
+    --         ui = {
+    --             enable = true,
+    --             checkboxes = {
+    --                 [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+    --                 ["x"] = { char = "", hl_group = "ObsidianDone" },
+    --             },
+    --         },
+    --         follow_url_func = function(url)
+    --             vim.ui.open(url)
+    --         end,
+    --     },
+    -- },
     { -- Detect tabstop and shiftwidth automatically
         "NMAC427/guess-indent.nvim"
     },
@@ -310,22 +303,13 @@ require("lazy").setup({
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
             local servers = {
-                clangd = {
-                    setting = {
-                        clangd = {
-                            diagnostics = {
-                                disable = { "-Wmissing-designated-field-initializers" }
-                            }
-                        }
-                    }
-                },
+                markdown_oxide = {},
+                clangd = {},
                 glsl_analyzer = {},
                 lua_ls = {
                     settings = {
                         Lua = {
-                            completion = {
-                                callSnippet = "Replace",
-                            },
+                            completion = { callSnippet = "Replace", },
                             diagnostics = { disable = { "missing-fields" } },
                         },
                     },

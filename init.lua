@@ -33,7 +33,6 @@ vim.g.have_nerd_font = true
 vim.opt.updatetime = 150
 vim.opt.timeoutlen = 500
 
-vim.opt.conceallevel = 2
 vim.opt.undofile = true
 vim.opt.confirm = true
 vim.schedule(function()
@@ -45,6 +44,9 @@ vim.opt.splitbelow = true
 
 vim.opt.mouse = "a"
 vim.opt.scrolloff = 10
+vim.opt.wrap = true
+vim.opt.wrapmargin = 5
+vim.opt.linebreak = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -61,6 +63,10 @@ vim.opt.breakindent = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- =============================================================================
+-- Mappings
+-- =============================================================================
+
 local function map(lhs, rhs, opts)
     opts = opts or {}
     vim.keymap.set(
@@ -70,10 +76,6 @@ local function map(lhs, rhs, opts)
         { noremap = opts.noremap or true, silent = opts.silent or true, desc = opts.desc, }
     )
 end
-
--- =============================================================================
--- Mappings
--- =============================================================================
 
 map("kj", "<esc>", { mode = "i", desc = "Esc in insert mode" })
 map("<enter>", "<enter><c-g>u", { mode = "i", desc = "Insert break for undo" })
@@ -88,6 +90,8 @@ map("N", "Nzz", { desc = "Scroll up and center" })
 
 map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
 
+map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
+
 -- =============================================================================
 -- Plugin Mappings
 -- =============================================================================
@@ -97,12 +101,20 @@ require("plugins")
 vim.cmd.colorscheme "custom-color"
 
 local toggleterm = require("toggleterm")
-map("<leader>t", function() toggleterm.toggle(nil, 20, nil, nil, nil) end, { desc = "Toggle terminal" })
+map("<leader>t", function() toggleterm.toggle(nil, 0, nil, nil, nil) end, { desc = "Toggle terminal" })
 
 local oil = require("oil")
 map("-", oil.open, { desc = "Open Oil file browser" })
 
+map("<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
+map("<leader>a", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "Code action" })
+-- "<leader>h" toggles LSP hints, if available
+
 local telescope = require("telescope.builtin")
+map("gd", telescope.lsp_definitions, { desc = "Go to definition" })
+map("gt", telescope.lsp_type_definitions, { desc = "Go to type definition" })
+map("gr", telescope.lsp_references, { desc = "References" })
+
 map("<leader>f", telescope.find_files, { desc = "Find file" })
 map("<leader>s.", telescope.resume, { desc = "Resume last search" })
 map("<leader>so", telescope.oldfiles, { desc = "Search old files" })
@@ -114,20 +126,12 @@ map("<leader>sk", telescope.keymaps, { desc = "Search keymaps" })
 map("<leader>st", telescope.builtin, { desc = "Search builtin" })
 map("<leader>sc", telescope.colorscheme, { desc = "Search colorscheme" })
 map("<leader>sl", telescope.highlights, { desc = "Search highlights" })
-map("<leader>/", function()
-    telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
-end, { desc = "Fuzzy find in current buffer" })
 map("<leader>sn", function()
     telescope.find_files { cwd = vim.fn.stdpath "config" }
 end, { desc = "Search config files" })
-
-local lsp = vim.lsp.buf
-map("gd", lsp.definition, { desc = "Go to definition" })
-map("<leader>r", lsp.rename, { desc = "Rename" })
-map("<leader>gt", lsp.type_definition, { desc = "Go to type definition" })
-map("<leader>gr", lsp.references, { desc = "Find references" })
-map("<leader>ga", lsp.code_action, { mode = { "n", "x" }, desc = "Code action" })
--- "<leader>h" toggles LSP hints, if available
+map("<leader>/", function()
+    telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
+end, { desc = "Fuzzy find in current buffer" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
@@ -136,12 +140,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.hl.on_yank()
     end,
 })
-
-map("<leader>ot", vim.cmd.ObsidianTags, { desc = "Search Obsidian tags" })
-map("<leader>og", vim.cmd.ObsidianSearch, { desc = "Grep Obsidian notes" })
-map("<leader>oc", vim.cmd.ObsidianTOC, { desc = "Show Obsidian table of contents" })
-map("<leader>ol", vim.cmd.ObsidianLinks, { desc = "Show Obsidian links" })
-map("<leader>ob", vim.cmd.ObsidianBacklinks, { desc = "Show Obsidian backlinks" })
-map("<leader>or", vim.cmd.ObsidianRename, { desc = "Rename Obsidian note" })
 
 -- vim: ts=4 sts=4 sw=4 et
