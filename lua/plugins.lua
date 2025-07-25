@@ -11,15 +11,8 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
 require("lazy").setup({
-    { -- File explorer
-        "stevearc/oil.nvim",
-        opts = {},
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        lazy = false,
-    },
-    { -- Collection of various small independent plugins/modules
+    {
         "echasnovski/mini.nvim",
         config = function()
             require("mini.ai").setup()
@@ -28,13 +21,22 @@ require("lazy").setup({
             require("mini.surround").setup()
         end,
     },
-    { -- Git integration
-        "tpope/vim-fugitive",
+    {
+        "folke/zen-mode.nvim",
+        opts = { window = { width = 126 } },
     },
-    { -- Detect tabstop and shiftwidth automatically
-        "NMAC427/guess-indent.nvim"
+    {
+        "stevearc/oil.nvim",
+        lazy = false,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {},
     },
-    { -- Highlight todo, notes, etc in comments
+    {
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        opts = {},
+    },
+    {
         "folke/todo-comments.nvim",
         event = "VimEnter",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -52,23 +54,22 @@ require("lazy").setup({
                 icons = { ' 󰲡  ', ' 󰲣  ', ' 󰲥  ', ' 󰲧  ', ' 󰲩  ', ' 󰲫  ' },
                 position = "inline",
             },
-            pipe_table = {
-                preset = "double",
-                border_virtual = true,
-            },
+            pipe_table = { border_virtual = true },
             indent = {
                 enabled = true,
-                per_level = 4,
+                per_level = 2,
                 skip_level = 0,
                 skip_heading = true,
             },
         },
     },
-    { -- Highlight, edit, and navigate code
+    {
+        "NMAC427/guess-indent.nvim"
+    },
+    {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         main = "nvim-treesitter.configs",
-        -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
         opts = {
             auto_install = true,
             highlight = { enable = true },
@@ -80,15 +81,11 @@ require("lazy").setup({
         --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
         --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     },
-    { -- AI autocompletion
+    {
         "supermaven-inc/supermaven-nvim",
-        opts = {
-            ignore_filetypes = {
-                "markdown",
-            },
-        },
+        opts = { ignore_filetypes = { "markdown" } },
     },
-    { -- Autocompletion
+    {
         "saghen/blink.cmp",
         event = "VimEnter",
         version = "1.*",
@@ -98,32 +95,21 @@ require("lazy").setup({
         opts = {
             keymap = {
                 preset = "none",
+                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
                 ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-                ['<C-e>'] = { 'hide', 'fallback' },
-                ['<CR>'] = { 'accept', 'fallback' },
-
-                ['<Up>'] = { 'select_prev', 'fallback' },
-                ['<Down>'] = { 'select_next', 'fallback' },
-                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
-                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
-
                 ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
                 ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
 
-                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+                ['<CR>'] = { 'accept', 'fallback' },
+                ['<C-c>'] = { 'hide', 'fallback' },
+                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
             },
-
-            appearance = {
-                -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-                nerd_font_variant = "mono",
-            },
-
+            appearance = { nerd_font_variant = "mono", },
             completion = {
-                -- By default, you may press `<c-space>` to show the documentation.
                 -- Optionally, set `auto_show = true` to show the documentation after a delay.
                 documentation = { auto_show = false, auto_show_delay_ms = 500 },
             },
-
             sources = {
                 default = { "lsp", "path", "lazydev" },
                 providers = {
@@ -133,21 +119,11 @@ require("lazy").setup({
                     },
                 },
             },
-
-            -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
-            -- which automatically downloads a prebuilt binary when enabled.
-            --
-            -- By default, we use the Lua implementation instead, but you may enable
-            -- the rust implementation via `'prefer_rust_with_warning'`
-            --
-            -- See :h blink-cmp-config-fuzzy for more information
-            -- fuzzy = { implementation = 'lua' },
             fuzzy = { implementation = "prefer_rust" },
-
             signature = { enabled = true },
         },
     },
-    { -- Fuzzy Finder (files, lsp, etc)
+    {
         "nvim-telescope/telescope.nvim",
         event = "VimEnter",
         dependencies = {
@@ -164,11 +140,7 @@ require("lazy").setup({
         },
         config = function()
             require("telescope").setup {
-                pickers = {
-                    find_files = {
-                        hidden = true,
-                    },
-                },
+                pickers = { find_files = { hidden = true } },
                 extensions = {
                     ["ui-select"] = {
                         require("telescope.themes").get_dropdown(),
@@ -179,7 +151,7 @@ require("lazy").setup({
             pcall(require("telescope").load_extension, "ui-select")
         end,
     },
-    { -- LSP Plugins
+    {
         "folke/lazydev.nvim",
         ft = "lua",
         opts = {
@@ -188,7 +160,7 @@ require("lazy").setup({
             },
         },
     },
-    { -- Main LSP Configuration
+    {
         "neovim/nvim-lspconfig",
         dependencies = {
             { "mason-org/mason.nvim", opts = {} },
@@ -201,22 +173,21 @@ require("lazy").setup({
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
                 callback = function(event)
-                    -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
                     ---@param client vim.lsp.Client
                     ---@param method vim.lsp.protocol.Method
                     ---@param bufnr? integer some lsp support methods only in specific files
                     ---@return boolean
                     local function client_supports_method(client, method, bufnr)
-                        if vim.fn.has "nvim-0.11" == 1 then
-                            return client:supports_method(method, bufnr)
-                        else
-                            return client.supports_method(method, { bufnr = bufnr })
-                        end
+                        return client:supports_method(method, bufnr)
                     end
 
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
-                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-                        local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+                    if client and client_supports_method(
+                        client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf
+                    ) then
+                        local highlight_augroup = vim.api.nvim_create_augroup(
+                            "kickstart-lsp-highlight", { clear = false }
+                        )
                         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                             buffer = event.buf,
                             group = highlight_augroup,
@@ -238,7 +209,9 @@ require("lazy").setup({
                         })
                     end
 
-                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+                    if client and client_supports_method(
+                        client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf
+                    ) then
                         vim.keymap.set("n", "<leader>h", function()
                             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
                         end, { desc = "Toggle LSP inlay hints" })
@@ -280,17 +253,15 @@ require("lazy").setup({
             --  - filetypes (table): Override the default list of associated filetypes for the server
             --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
             --  - settings (table): Override the default settings passed when initializing the server.
-            --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+            --        For example, to see the options for `lua_ls`, you could go to:
+            --        https://luals.github.io/wiki/settings/
             local servers = {
                 markdown_oxide = {},
                 clangd = {},
                 glsl_analyzer = {},
                 lua_ls = {
                     settings = {
-                        Lua = {
-                            completion = { callSnippet = "Replace", },
-                            diagnostics = { disable = { "missing-fields" } },
-                        },
+                        Lua = { diagnostics = { disable = { "missing-fields" } } },
                     },
                 },
             }
@@ -299,14 +270,13 @@ require("lazy").setup({
             require("mason-tool-installer").setup { ensure_installed = ensure_installed }
 
             require("mason-lspconfig").setup {
-                ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+                ensure_installed = {}, -- explicitly set to an empty table
                 automatic_installation = false,
                 handlers = {
                     function(server_name)
                         local server = servers[server_name] or {}
-                        -- This handles overriding only values explicitly passed
-                        -- by the server configuration above. Useful when disabling
-                        -- certain features of an LSP (for example, turning off formatting for ts_ls)
+                        -- This handles overriding only values explicitly passed by the server configuration above.
+                        -- Useful when disabling certain features of an LSP
                         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
                         require("lspconfig")[server_name].setup(server)
                     end,
@@ -333,5 +303,3 @@ require("lazy").setup({
         },
     },
 })
-
--- vim: ts=4 sts=4 sw=4 et

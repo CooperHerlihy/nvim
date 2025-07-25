@@ -22,9 +22,9 @@
 
 --]]
 
--- =============================================================================
--- Options
--- =============================================================================
+-- ===============================================================================================================
+-- = Options
+-- ===============================================================================================================
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -43,7 +43,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.mouse = "a"
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 16
 vim.opt.wrap = true
 vim.opt.wrapmargin = 5
 vim.opt.linebreak = true
@@ -54,6 +54,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
 vim.opt.colorcolumn = { "120", "180" }
 vim.opt.list = true
+vim.opt.termguicolors = true
 
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
@@ -63,18 +64,17 @@ vim.opt.breakindent = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- =============================================================================
--- Mappings
--- =============================================================================
+-- ===============================================================================================================
+-- = Mappings
+-- ===============================================================================================================
 
 local function map(lhs, rhs, opts)
     opts = opts or {}
-    vim.keymap.set(
-        opts.mode or { "n", "v", "o" },
-        lhs,
-        rhs,
-        { noremap = opts.noremap or true, silent = opts.silent or true, desc = opts.desc, }
-    )
+    vim.keymap.set( opts.mode or { "n", "v", "o" }, lhs, rhs, {
+        noremap = opts.noremap or true,
+        silent = opts.silent or true,
+        desc = opts.desc,
+    })
 end
 
 map("kj", "<esc>", { mode = "i", desc = "Esc in insert mode" })
@@ -85,35 +85,37 @@ map("<esc>", "<c-\\><c-n>", { mode = "t", desc = "Esc in terminal mode" })
 
 map("<c-d>", "<c-d>zz", { desc = "Scroll down and center" })
 map("<c-u>", "<c-u>zz", { desc = "Scroll up and center" })
-map("n", "nzz", { desc = "Scroll down and center" })
-map("N", "Nzz", { desc = "Scroll up and center" })
+map("n", "nzz", { desc = "Next match and center" })
+map("N", "Nzz", { desc = "Previous match and center" })
 
 map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
 
 map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
 
--- =============================================================================
--- Plugin Mappings
--- =============================================================================
+-- ===============================================================================================================
+-- = Plugin Mappings
+-- ===============================================================================================================
 
 require("plugins")
 
-vim.cmd.colorscheme "custom-color"
+vim.cmd.colorscheme("custom-color")
+map("<leader>cc", function() vim.cmd.colorscheme("custom-color") end, { desc = "Custom color theme" })
+map("<leader>cd", function() vim.cmd.colorscheme("default") end, { desc = "Default color theme" })
+map("<leader>ci", vim.cmd.Inspect, { desc = "Inspect color" })
 
-local terminal = require("custom.terminal")
-map("<leader>t", function() terminal.toggle() end, { desc = "Toggle terminal" })
-
-local oil = require("oil")
-map("-", oil.open, { desc = "Open Oil file browser" })
-
-map("<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
-map("<leader>a", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "Code action" })
--- "<leader>h" toggles LSP hints, if available
+map("-", require("oil").open, { desc = "Open Oil file browser" })
+map("<leader>t", require("custom.terminal").toggle, { desc = "Toggle terminal" })
+map("<leader>m", require("render-markdown").toggle, { desc = "Toggle markdown render" })
+map("<leader>z", require("zen-mode").toggle, { desc = "Toggle zen mode" })
 
 local telescope = require("telescope.builtin")
 map("gd", telescope.lsp_definitions, { desc = "Go to definition" })
+map("gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
 map("gt", telescope.lsp_type_definitions, { desc = "Go to type definition" })
 map("gr", telescope.lsp_references, { desc = "References" })
+map("<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
+map("<leader>a", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "Code action" })
+-- "<leader>h" toggles LSP hints, if available
 
 map("<leader>f", telescope.find_files, { desc = "Find file" })
 map("<leader>s.", telescope.resume, { desc = "Resume last search" })
@@ -125,15 +127,13 @@ map("<leader>sh", telescope.help_tags, { desc = "Search help tags" })
 map("<leader>sk", telescope.keymaps, { desc = "Search keymaps" })
 map("<leader>st", telescope.builtin, { desc = "Search builtin" })
 map("<leader>sc", telescope.colorscheme, { desc = "Search colorscheme" })
-map("<leader>sl", telescope.highlights, { desc = "Search highlights" })
 map("<leader>sn", function()
-    telescope.find_files { cwd = vim.fn.stdpath "config" }
+    telescope.find_files({ cwd = vim.fn.stdpath "config" })
 end, { desc = "Search config files" })
 map("<leader>/", function()
     telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
 end, { desc = "Fuzzy find in current buffer" })
 
-map("<leader>m", function() vim.cmd("RenderMarkdown toggle") end, { desc = "Toggle markdown render" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
@@ -142,5 +142,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.hl.on_yank()
     end,
 })
-
--- vim: ts=4 sts=4 sw=4 et
