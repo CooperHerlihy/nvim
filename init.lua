@@ -52,7 +52,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
-vim.opt.colorcolumn = { "120", "180" }
+vim.opt.colorcolumn = "120"
 vim.opt.list = true
 vim.opt.termguicolors = true
 
@@ -108,13 +108,14 @@ map("<leader>t", require("custom.terminal").toggle, { desc = "Toggle terminal" }
 map("<leader>m", require("render-markdown").toggle, { desc = "Toggle markdown render" })
 map("<leader>z", require("zen-mode").toggle, { desc = "Toggle zen mode" })
 
+local lsp = vim.lsp.buf
 local telescope = require("telescope.builtin")
 map("gd", telescope.lsp_definitions, { desc = "Go to definition" })
-map("gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
+map("gD", lsp.declaration, { desc = "Go to declaration" })
 map("gt", telescope.lsp_type_definitions, { desc = "Go to type definition" })
 map("gr", telescope.lsp_references, { desc = "References" })
-map("<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
-map("<leader>a", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "Code action" })
+map("<leader>r", lsp.rename, { desc = "Rename" })
+map("<leader>a", lsp.code_action, { mode = { "n", "x" }, desc = "Code action" })
 -- "<leader>h" toggles LSP hints, if available
 
 map("<leader>f", telescope.find_files, { desc = "Find file" })
@@ -133,7 +134,6 @@ end, { desc = "Search config files" })
 map("<leader>/", function()
     telescope.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
 end, { desc = "Fuzzy find in current buffer" })
-
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",

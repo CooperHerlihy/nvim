@@ -32,6 +32,9 @@ require("lazy").setup({
         opts = {},
     },
     {
+        "NMAC427/guess-indent.nvim"
+    },
+    {
         "catgoose/nvim-colorizer.lua",
         event = "BufReadPre",
         opts = {},
@@ -41,30 +44,6 @@ require("lazy").setup({
         event = "VimEnter",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = { signs = false },
-    },
-    {
-        'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
-        ---@module 'render-markdown'
-        ---@type render.md.UserConfig
-        opts = {
-            render_modes = true,
-            heading = {
-                sign = false,
-                icons = { ' 󰲡  ', ' 󰲣  ', ' 󰲥  ', ' 󰲧  ', ' 󰲩  ', ' 󰲫  ' },
-                position = "inline",
-            },
-            pipe_table = { border_virtual = true },
-            indent = {
-                enabled = true,
-                per_level = 2,
-                skip_level = 0,
-                skip_heading = true,
-            },
-        },
-    },
-    {
-        "NMAC427/guess-indent.nvim"
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -83,7 +62,7 @@ require("lazy").setup({
     },
     {
         "supermaven-inc/supermaven-nvim",
-        opts = { ignore_filetypes = { "markdown" } },
+        opts = { ignore_filetypes = { "markdown", "org" } },
     },
     {
         "saghen/blink.cmp",
