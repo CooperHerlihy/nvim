@@ -47,6 +47,7 @@ vim.opt.scrolloff = 16
 vim.opt.wrap = true
 vim.opt.wrapmargin = 5
 vim.opt.linebreak = true
+vim.opt.textwidth = 120
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -78,7 +79,7 @@ local function map(lhs, rhs, opts)
 end
 
 map("kj", "<esc>", { mode = "i", desc = "Esc in insert mode" })
-map("<enter>", "<enter><c-g>u", { mode = "i", desc = "Insert break for undo" })
+-- map("<enter>", "<enter><c-g>u", { mode = "i", desc = "Insert break for undo" })
 
 map("kj", "<c-\\><c-n>", { mode = "t", desc = "Esc in terminal mode" })
 map("<esc>", "<c-\\><c-n>", { mode = "t", desc = "Esc in terminal mode" })
@@ -90,7 +91,7 @@ map("N", "Nzz", { desc = "Previous match and center" })
 
 map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
 
-map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
+-- map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
 
 -- ===============================================================================================================
 -- = Plugin Mappings
@@ -105,7 +106,6 @@ map("<leader>ci", vim.cmd.Inspect, { desc = "Inspect color" })
 
 map("-", require("oil").open, { desc = "Open Oil file browser" })
 map("<leader>t", require("custom.terminal").toggle, { desc = "Toggle terminal" })
-map("<leader>m", require("render-markdown").toggle, { desc = "Toggle markdown render" })
 map("<leader>z", require("zen-mode").toggle, { desc = "Toggle zen mode" })
 
 local lsp = vim.lsp.buf

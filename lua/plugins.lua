@@ -22,6 +22,9 @@ require("lazy").setup({
         end,
     },
     {
+        "tpope/vim-repeat",
+    },
+    {
         "folke/zen-mode.nvim",
         opts = { window = { width = 126 } },
     },
@@ -51,6 +54,7 @@ require("lazy").setup({
         main = "nvim-treesitter.configs",
         opts = {
             auto_install = true,
+            -- ignore_install = { "org" },
             highlight = { enable = true },
         },
         -- There are additional nvim-treesitter modules that you can use to interact
