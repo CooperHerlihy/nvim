@@ -14,7 +14,7 @@ vim.opt.timeoutlen = 500
 vim.opt.undofile = true
 vim.opt.confirm = true
 vim.schedule(function()
-    vim.opt.clipboard:append("unnamedplus")
+   vim.opt.clipboard:append("unnamedplus")
 end)
 
 vim.opt.splitright = true
