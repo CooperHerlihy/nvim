@@ -31,7 +31,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
-vim.opt.colorcolumn = "120"
+vim.opt.colorcolumn = "121"
 vim.opt.list = true
 vim.opt.termguicolors = true
 
@@ -167,7 +167,7 @@ require("lazy").setup({
                 appearance = { nerd_font_variant = "mono", },
                 completion = { documentation = { auto_show = false, auto_show_delay_ms = 500 } },
 
-                sources = { default = { "lsp", "path", "buffer" } },
+                sources = { default = { "lsp", "path" } },
                 fuzzy = { implementation = "prefer_rust" },
                 signature = { enabled = true },
             },
@@ -274,7 +274,18 @@ require("lazy").setup({
                 highlight = { enable = true },
             },
         },
-        { "supermaven-inc/supermaven-nvim", opts = { ignore_filetypes = { "markdown", "org" } } },
+        {
+            'MeanderingProgrammer/render-markdown.nvim',
+            dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+            ---@module 'render-markdown'
+            ---@type render.md.UserConfig
+            opts = {
+                render_modes = true,
+                heading = { sign = false, },
+                pipe_table = { border_virtual = true },
+            },
+        },
+        { "supermaven-inc/supermaven-nvim", opts = { ignore_filetypes = { "markdown" } } },
         { "folke/zen-mode.nvim", opts = { window = { width = 126 } } },
         { 'echasnovski/mini.nvim', version = false },
         { "tpope/vim-repeat" },
@@ -307,7 +318,10 @@ map("<leader>sb", telescope.buffers, { desc = "Search buffers" })
 map("<leader>sg", telescope.live_grep, { desc = "Search grep" })
 map("<leader>sd", telescope.diagnostics, { desc = "Search diagnostics" })
 map("<leader>sk", telescope.keymaps, { desc = "Search keymaps" })
+map("<leader>sh", telescope.help_tags, { desc = "Search help" })
 
-map("<leader>sc", function() telescope.find_files({ cwd = vim.fn.stdpath "config" }) end, { desc = "Search config" })
-map("<leader>sn", function() telescope.find_files({ cwd = "~/notes/" }) end, { desc = "Search notes" })
+map("<leader>c", function() telescope.find_files({ cwd = vim.fn.stdpath "config" }) end, { desc = "Search config" })
+map("<leader>nf", function() telescope.find_files({ cwd = "~/notes/" }) end, { desc = "Search notes" })
+map("<leader>ng", function() telescope.live_grep({ cwd = "~/notes/" }) end, { desc = "Grep notes" })
+map("<leader>na", function() vim.cmd("edit ~/notes/Agenda.md") end, { desc = "Open agenda" })
 
