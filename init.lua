@@ -287,6 +287,7 @@ require("lazy").setup({
 require("mini.ai").setup()
 require("mini.comment").setup()
 require("mini.pairs").setup()
+require("mini.move").setup()
 
 map("-", vim.cmd.Ex, { desc = "Open Netrw" })
 map("<leader>z", vim.cmd.ZenMode, { desc = "Toggle zen mode" })
