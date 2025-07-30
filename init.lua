@@ -79,6 +79,15 @@ map("N", "Nzz", { desc = "Previous match and center" })
 
 map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
 
+map("-", vim.cmd.Ex, { desc = "Open Netrw" })
+
+map("<leader>na", function() vim.cmd("edit ~/notes/Agenda.md") end, { desc = "Open agenda" })
+map("<leader>nc", function()
+    vim.ui.input({ prompt = "Create/open note: " }, function(name)
+        vim.cmd("edit ~/notes/" .. name .. ".md")
+    end)
+end, { desc = "Create new note" })
+
 -- ===============================================================================================================
 -- = Plugins
 -- ===============================================================================================================
@@ -134,20 +143,53 @@ require("lazy").setup({
         {
             'nvim-telescope/telescope.nvim',
             branch = '0.1.x',
-            dependencies = { 'nvim-lua/plenary.nvim' },
-            opts = {
-                defaults = {
-                    vimgrep_arguments = vimgrep_arguments,
-                },
-                pickers = {
-                    find_files = {
-                        find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+            dependencies = { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' },
+            keys = {
+                { "gd", function() vim.cmd("Telescope lsp_definitions") end, desc = "Goto definition" },
+                { "gD", vim.lsp.buf.declaration, desc = "Goto declaration" },
+                { "gt", function() vim.cmd("Telescope lsp_type_definitions") end, desc = "Goto type definition" },
+                { "gr", function() vim.cmd("Telescope lsp_references") end, desc = "Goto references" },
+                { "<leader>r", vim.lsp.buf.rename, desc = "Rename symbol" },
+                { "<leader>a", vim.lsp.buf.code_action, mode = { "n", "x" }, desc = "Code action" },
+
+                { "<leader>f", function() vim.cmd("Telescope find_files") end, desc = "Find file" },
+                { "<leader>s.", function() vim.cmd("Telescope resume") end, desc = "Resume last search" },
+                { "<leader>so", function() vim.cmd("Telescope oldfiles") end, desc = "Search old files" },
+                { "<leader>sb", function() vim.cmd("Telescope buffers") end, desc = "Search buffers" },
+                { "<leader>sg", function() vim.cmd("Telescope live_grep") end, desc = "Search grep" },
+                { "<leader>sd", function() vim.cmd("Telescope diagnostics") end, desc = "Search diagnostics" },
+                { "<leader>sk", function() vim.cmd("Telescope keymaps") end, desc = "Search keymaps" },
+                { "<leader>sh", function() vim.cmd("Telescope help_tags") end, desc = "Search help" },
+
+                { "<leader>c", function()
+                    vim.cmd("Telescope find_files cwd=" .. vim.fn.stdpath "config")
+                end, desc = "Search config" },
+
+                { "<leader>nf", function()
+                    vim.cmd("Telescope find_files cwd=~/notes/")
+                end, desc = "Search notes" },
+                { "<leader>ng", function()
+                    vim.cmd("Telescope live_grep cwd=~/notes/")
+                end, desc = "Grep notes" },
+            },
+            config = function()
+                local opts = {
+                    defaults = {
+                        vimgrep_arguments = vimgrep_arguments,
                     },
-                },
-            }
+                    pickers = {
+                        find_files = {
+                            find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+                        },
+                    },
+                }
+                require("telescope").setup(opts)
+
+            end,
         },
         {
             'saghen/blink.cmp',
+            event = "UIEnter",
             version = '1.*',
             ---@module 'blink.cmp'
             ---@type blink.cmp.Config
@@ -266,6 +308,11 @@ require("lazy").setup({
             end,
         },
         {
+            "supermaven-inc/supermaven-nvim",
+            event = "VeryLazy",
+            opts = { ignore_filetypes = { "markdown" } }
+        },
+        {
             "nvim-treesitter/nvim-treesitter",
             build = ":TSUpdate",
             main = "nvim-treesitter.configs",
@@ -276,6 +323,7 @@ require("lazy").setup({
         },
         {
             'MeanderingProgrammer/render-markdown.nvim',
+            ft = { "markdown" },
             dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
             ---@module 'render-markdown'
             ---@type render.md.UserConfig
@@ -285,43 +333,25 @@ require("lazy").setup({
                 pipe_table = { border_virtual = true },
             },
         },
-        { "supermaven-inc/supermaven-nvim", opts = { ignore_filetypes = { "markdown" } } },
-        { "folke/zen-mode.nvim", opts = { window = { width = 126 } } },
-        { 'echasnovski/mini.nvim', version = false },
-        { "tpope/vim-repeat" },
-        { "tpope/vim-surround" },
-        { "tpope/vim-sleuth" },
+        {
+            "folke/zen-mode.nvim",
+            keys = { { "<leader>z", vim.cmd.ZenMode,  desc = "Toggle zen mode" } },
+            opts = { window = { width = 126 } }
+        },
+        {
+            'echasnovski/mini.nvim',
+            version = false,
+            config = function()
+                require("mini.ai").setup()
+                require("mini.comment").setup()
+                require("mini.pairs").setup()
+                require("mini.move").setup()
+            end
+        },
+        { "tpope/vim-surround", },
+        { "tpope/vim-sleuth", },
+        { "tpope/vim-repeat", },
     },
     checker = { enabled = true },
 })
-
-require("mini.ai").setup()
-require("mini.comment").setup()
-require("mini.pairs").setup()
-require("mini.move").setup()
-
-map("-", vim.cmd.Ex, { desc = "Open Netrw" })
-map("<leader>z", vim.cmd.ZenMode, { desc = "Toggle zen mode" })
-
-local telescope = require("telescope.builtin")
-map("gd", telescope.lsp_definitions, { desc = "Goto definition" })
-map("gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
-map("gt", telescope.lsp_type_definitions, { desc = "Goto type definition" })
-map("gr", telescope.lsp_references, { desc = "Goto references" })
-map("<leader>r", vim.lsp.buf.rename, { desc = "Rename symbol" })
-map("<leader>a", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "Code action" })
-
-map("<leader>f", telescope.find_files, { desc = "Find file" })
-map("<leader>s.", telescope.resume, { desc = "Resume last search" })
-map("<leader>so", telescope.oldfiles, { desc = "Search old files" })
-map("<leader>sb", telescope.buffers, { desc = "Search buffers" })
-map("<leader>sg", telescope.live_grep, { desc = "Search grep" })
-map("<leader>sd", telescope.diagnostics, { desc = "Search diagnostics" })
-map("<leader>sk", telescope.keymaps, { desc = "Search keymaps" })
-map("<leader>sh", telescope.help_tags, { desc = "Search help" })
-
-map("<leader>c", function() telescope.find_files({ cwd = vim.fn.stdpath "config" }) end, { desc = "Search config" })
-map("<leader>nf", function() telescope.find_files({ cwd = "~/notes/" }) end, { desc = "Search notes" })
-map("<leader>ng", function() telescope.live_grep({ cwd = "~/notes/" }) end, { desc = "Grep notes" })
-map("<leader>na", function() vim.cmd("edit ~/notes/Agenda.md") end, { desc = "Open agenda" })
 

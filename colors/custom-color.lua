@@ -119,27 +119,6 @@ local groups = {
     ["RenderMarkdownQuote"] = { fg = accent3 },
     ["RenderMarkdownCode"] = { bg = semihighlight },
 
-    -- ["@text.title.1.marker.markdown"] = { fg = accent1, bg = semihighlight },
-    -- ["@text.title.2.marker.markdown"] = { fg = accent2, bg = semihighlight },
-    -- ["@text.title.3.marker.markdown"] = { fg = accent3, bg = semihighlight },
-    -- ["@text.title.4.marker.markdown"] = { fg = accent1, bg = semihighlight },
-    -- ["@text.title.5.marker.markdown"] = { fg = accent2, bg = semihighlight },
-    -- ["@text.title.6.marker.markdown"] = { fg = accent3, bg = semihighlight },
-
-    -- ["@org.headline.level1"] = { fg = accent1, bg = semihighlight },
-    -- ["@org.headline.level2"] = { fg = accent2, bg = semihighlight },
-    -- ["@org.headline.level3"] = { fg = accent3, bg = semihighlight },
-    -- ["@org.headline.level4"] = { fg = accent1, bg = semihighlight },
-    -- ["@org.headline.level5"] = { fg = accent2, bg = semihighlight },
-    -- ["@org.headline.level6"] = { fg = accent3, bg = semihighlight },
-    -- ["@org.headline.level7"] = { fg = accent1, bg = semihighlight },
-    -- ["@org.headline.level8"] = { fg = accent2, bg = semihighlight },
-
-    -- ["@org.bullet"] = { fg = accent1 },
-    -- ["@org.hyperlink"] = { fg = accent2 },
-    -- ["@org.verbatim"] = { fg = accent3 },
-    -- ["@org.code"] = { bg = semihighlight },
-
     -- Modifiers
 
     ["TermCursor"] = { reverse = true },
