@@ -315,6 +315,10 @@ require("lazy").setup({
             end,
         },
         {
+            "mason-org/mason.nvim",
+            opts = {}
+        },
+        {
             "supermaven-inc/supermaven-nvim",
             event = "VeryLazy",
             opts = { ignore_filetypes = { "markdown" } }
