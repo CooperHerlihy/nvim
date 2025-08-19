@@ -84,7 +84,14 @@ map("-", vim.cmd.Ex, { desc = "Open Netrw" })
 map("<leader>na", function() vim.cmd("edit ~/notes/Agenda.md") end, { desc = "Open agenda" })
 map("<leader>nc", function()
     vim.ui.input({ prompt = "Create/open note: " }, function(name)
-        vim.cmd("edit ~/notes/" .. name .. ".md")
+        if name == nil or name == "" then return end
+        vim.cmd(
+            "edit ~/notes/" ..
+            name:sub(1, 1):upper() ..
+            name:sub(2)
+                :gsub(" ", "_")
+                :gsub("_(%a)", function(c) return "_" .. c:upper() end) ..
+            ".md")
     end)
 end, { desc = "Create new note" })
 
