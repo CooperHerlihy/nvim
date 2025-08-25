@@ -179,20 +179,16 @@ require("lazy").setup({
                     vim.cmd("Telescope live_grep cwd=~/notes/")
                 end, desc = "Grep notes" },
             },
-            config = function()
-                local opts = {
-                    defaults = {
-                        vimgrep_arguments = vimgrep_arguments,
+            opts = {
+                defaults = {
+                    vimgrep_arguments = vimgrep_arguments,
+                },
+                pickers = {
+                    find_files = {
+                        find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
                     },
-                    pickers = {
-                        find_files = {
-                            find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-                        },
-                    },
-                }
-                require("telescope").setup(opts)
-
-            end,
+                },
+            }
         },
         {
             'saghen/blink.cmp',

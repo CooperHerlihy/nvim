@@ -13,8 +13,8 @@ local text = "#efefff" -- "NvimLightGrey2"
 local comment = "#7b7895" -- "NvimLightGrey4"
 local nontext = "#44415a" -- "NvimDarkGrey3"
 
-local accent1 = "#cab5ff" -- "NvimLightCyan"
-local accent2 = "#85a0f8" -- "NvimLightBlue"
+local accent1 = "#ddb3ff" -- "#cab5ff" -- "NvimLightCyan"
+local accent2 = "#928bf8" -- "#85a0f8" -- "NvimLightBlue"
 local accent3 = "#f9bca4" -- "NvimLightGreen"
 
 local groups = {
