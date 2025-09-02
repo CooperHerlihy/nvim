@@ -82,6 +82,7 @@ map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "F
 map("-", vim.cmd.Ex, { desc = "Open Netrw" })
 
 map("<leader>na", function() vim.cmd("edit ~/notes/Agenda.md") end, { desc = "Open agenda" })
+map("<leader>ns", function() vim.cmd("edit ~/notes/Scratch.md") end, { desc = "Open scratch" })
 map("<leader>nc", function()
     vim.ui.input({ prompt = "Create/open note: " }, function(name)
         if name == nil or name == "" then return end
