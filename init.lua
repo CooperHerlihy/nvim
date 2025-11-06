@@ -11,6 +11,7 @@ vim.opt.timeoutlen = 500
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.winborder = "rounded"
 
 vim.opt.mouse = "a"
 vim.opt.scrolloff = 16
@@ -65,11 +66,10 @@ map("N", "Nzzzv", { desc = "Previous match and center" })
 map("*", "*vzzzv", { mode = "v", desc = "Next match under selection" })
 map("#", "#vzzzv", { mode = "v", desc = "Previous match under selection" })
 
--- map("t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
-
 map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
 map("-", vim.cmd.Ex, { desc = "Open Netrw" })
-map("<leader>r", vim.cmd.restart, { desc = "Restart Neovim" })
+
+map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
 
 vim.pack.add({
     "https://github.com/christoomey/vim-tmux-navigator",
@@ -117,7 +117,9 @@ require("supermaven-nvim").setup({
 local supermaven = require("supermaven-nvim.api")
 supermaven.stop()
 
-map("<leader>aie", function() supermaven.start() print("Supermaven enabled") end, { desc = "Enable supermaven" })
-map("<leader>aid", function() supermaven.stop() print("Supermaven disabled") end, { desc = "Disable supermaven" })
+map("<leader>ai", function()
+    supermaven.toggle()
+    if supermaven.is_running() then print("AI enabled") else print("AI disabled") end
+end, { desc = "Enable supermaven AI" })
 
 vim.cmd.colorscheme("custom-color")
