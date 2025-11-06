@@ -39,14 +39,6 @@ vim.g.maplocalleader = " "
 vim.g.mapleader = " "
 vim.g.have_nerd_font = true
 
-vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-    callback = function()
-        vim.hl.on_yank()
-    end,
-})
-
 local function map(lhs, rhs, opts)
     opts = opts or {}
     vim.keymap.set( opts.mode or { "n", "v", "o" }, lhs, rhs, {
@@ -70,6 +62,14 @@ map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
 map("-", vim.cmd.Ex, { desc = "Open Netrw" })
 
 map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+    desc = "Highlight on yank",
+    group = vim.api.nvim_create_augroup("highlight-yank", {}),
+    callback = function()
+        vim.hl.on_yank()
+    end,
+})
 
 vim.pack.add({
     "https://github.com/christoomey/vim-tmux-navigator",
