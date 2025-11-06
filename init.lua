@@ -110,7 +110,7 @@ require("render-markdown").setup({
     pipe_table = { border_virtual = true },
 })
 
-require("supermaven-nvim").setup()
+require("supermaven-nvim").setup({})
 
 local supermaven = require("supermaven-nvim.api")
 supermaven.stop()
