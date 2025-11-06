@@ -88,7 +88,7 @@ require("mini.pick").setup()
 
 map("<leader>.", MiniPick.builtin.resume, { desc = "Resume search/grep" })
 map("<leader>f", MiniPick.builtin.files, { desc = "Fuzzy find files" })
-map("<leader>b", MiniPick.builtin.buffers, { desc = "Search in buffers" })
+map("<leader>t", MiniPick.builtin.buffers, { desc = "Search tabs (open buffers)" })
 map("<leader>g", MiniPick.builtin.grep_live, { desc = "Grep in cwd" })
 map("<leader>h", MiniPick.builtin.help, { desc = "Search help" })
 
