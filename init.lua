@@ -41,7 +41,7 @@ vim.g.have_nerd_font = true
 
 local function map(lhs, rhs, opts)
     opts = opts or {}
-    vim.keymap.set( opts.mode or { "n", "v", "o" }, lhs, rhs, {
+    vim.keymap.set(opts.mode or { "n", "v", "o" }, lhs, rhs, {
         noremap = opts.noremap or true,
         silent = opts.silent or true,
         desc = opts.desc,
@@ -73,12 +73,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.pack.add({
     "https://github.com/christoomey/vim-tmux-navigator",
-    "https://github.com/tpope/vim-surround",
     "https://github.com/tpope/vim-sleuth",
+    "https://github.com/tpope/vim-surround",
     "https://github.com/nvim-mini/mini.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
-    "https://github.com/supermaven-inc/supermaven-nvim",
 })
 
 require("mini.icons").setup()
@@ -109,15 +108,5 @@ require("render-markdown").setup({
     heading = { sign = false, },
     pipe_table = { border_virtual = true },
 })
-
-require("supermaven-nvim").setup({})
-
-local supermaven = require("supermaven-nvim.api")
-supermaven.stop()
-
-map("<leader>ai", function()
-    supermaven.toggle()
-    if supermaven.is_running() then print("AI enabled") else print("AI disabled") end
-end, { desc = "Enable supermaven AI" })
 
 vim.cmd.colorscheme("custom-color")
