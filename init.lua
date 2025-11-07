@@ -68,7 +68,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 vim.pack.add({
-    "https://github.com/christoomey/vim-tmux-navigator",
     "https://github.com/tpope/vim-sleuth",
     "https://github.com/tpope/vim-surround",
     "https://github.com/nvim-mini/mini.nvim",
