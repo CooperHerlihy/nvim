@@ -5,7 +5,6 @@ end)
 vim.opt.undofile = true
 vim.opt.backup = false
 vim.opt.swapfile = false
-
 vim.opt.updatetime = 150
 vim.opt.timeoutlen = 500
 
@@ -16,15 +15,14 @@ vim.opt.winborder = "rounded"
 vim.opt.mouse = "a"
 vim.opt.scrolloff = 16
 vim.opt.wrap = true
-vim.opt.wrapmargin = 5
 vim.opt.linebreak = true
-vim.opt.textwidth = 120
+vim.opt.textwidth = 80
 
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
-vim.opt.colorcolumn = "121"
+vim.opt.colorcolumn = "81,121"
 vim.opt.list = true
 
 vim.opt.tabstop = 4
@@ -41,27 +39,25 @@ vim.g.have_nerd_font = true
 
 local function map(lhs, rhs, opts)
     opts = opts or {}
-    vim.keymap.set(opts.mode or { "n", "v", "o" }, lhs, rhs, {
+    vim.keymap.set(opts.mode or {"n", "v", "o"}, lhs, rhs, {
         noremap = opts.noremap or true,
         silent = opts.silent or true,
         desc = opts.desc,
     })
 end
 
-map("kj", "<esc>", { mode = "i", desc = "Esc in insert mode" })
-map("<enter>", "<enter><c-g>u", { mode = "i", desc = "Insert break for undo" })
+map("kj", "<esc>", {mode = "i", desc = "Esc in insert mode"})
+map("<enter>", "<enter><c-g>u", {mode = "i", desc = "Insert break for undo"})
 
-map("<c-d>", "<c-d>zz", { desc = "Scroll down and center" })
-map("<c-u>", "<c-u>zz", { desc = "Scroll up and center" })
-map("n", "nzzzv", { desc = "Next match and center" })
-map("N", "Nzzzv", { desc = "Previous match and center" })
-map("*", "*vzzzv", { mode = "v", desc = "Next match under selection" })
-map("#", "#vzzzv", { mode = "v", desc = "Previous match under selection" })
+map("<c-d>", "<c-d>zz", {desc = "Scroll down and center"})
+map("<c-u>", "<c-u>zz", {desc = "Scroll up and center"})
+map("n", "nzzzv", {desc = "Next match and center"})
+map("N", "Nzzzv", {desc = "Previous match and center"})
 
-map("<esc>", vim.cmd.nohlsearch, { desc = "Clear search highlight" })
-map("-", vim.cmd.Ex, { desc = "Open Netrw" })
+map("<esc>", vim.cmd.nohlsearch, {desc = "Clear search highlight"})
+map("-", vim.cmd.Ex, {desc = "Open Netrw"})
 
-map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", { mode = "v", desc = "Format table" })
+map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", {mode = "v", desc = "Format table"})
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight on yank",
@@ -80,33 +76,32 @@ vim.pack.add({
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 
-require("mini.icons").setup()
-require("mini.pairs").setup()
 require("mini.comment").setup()
+require("mini.icons").setup()
 require("mini.pick").setup()
 
-map("<leader>.", MiniPick.builtin.resume, { desc = "Resume search/grep" })
-map("<leader>f", MiniPick.builtin.files, { desc = "Fuzzy find files" })
-map("<leader>t", MiniPick.builtin.buffers, { desc = "Search tabs (open buffers)" })
-map("<leader>g", MiniPick.builtin.grep_live, { desc = "Grep in cwd" })
-map("<leader>h", MiniPick.builtin.help, { desc = "Search help" })
+map("<leader>.", MiniPick.builtin.resume, {desc = "Resume search/grep"})
+map("<leader>f", MiniPick.builtin.files, {desc = "Fuzzy find files"})
+map("<leader>t", MiniPick.builtin.buffers, {desc = "Search tabs (open buffers)"})
+map("<leader>g", MiniPick.builtin.grep_live, {desc = "Grep in cwd"})
+map("<leader>h", MiniPick.builtin.help, {desc = "Search help"})
 
 map("<leader>n", function()
-    MiniPick.builtin.files(nil, { source = { cwd = "~/notes/", name = "Notes" } })
-end, { desc = "Search notes" })
+    MiniPick.builtin.files(nil, {source = {cwd = "~/notes/", name = "Notes"}})
+end, {desc = "Search notes"})
 map("<leader>c", function()
-    MiniPick.builtin.files(nil, { source = { cwd = "~/.config/nvim/", name = "Config" } })
-end, { desc = "Search Neovim config" })
+    MiniPick.builtin.files(nil, {source = {cwd = "~/.config/nvim/", name = "Config"}})
+end, {desc = "Search Neovim config"})
 
 require("nvim-treesitter.configs").setup({
     auto_install = true,
-    highlight = { enable = true },
+    highlight = {enable = true},
 })
 
 require("render-markdown").setup({
     render_modes = true,
-    heading = { sign = false, },
-    pipe_table = { border_virtual = true },
+    heading = {sign = false},
+    pipe_table = {border_virtual = true},
 })
 
 vim.cmd.colorscheme("custom-color")
