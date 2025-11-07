@@ -18,7 +18,6 @@ vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.textwidth = 80
 
-vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
