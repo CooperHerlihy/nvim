@@ -18,6 +18,7 @@ vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.textwidth = 80
 
+vim.opt.laststatus = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
@@ -70,6 +71,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.pack.add({
     "https://github.com/tpope/vim-sleuth",
     "https://github.com/tpope/vim-surround",
+    "https://github.com/tpope/vim-repeat",
     "https://github.com/nvim-mini/mini.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
