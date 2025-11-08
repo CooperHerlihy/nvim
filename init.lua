@@ -46,6 +46,7 @@ local function map(lhs, rhs, opts)
     })
 end
 
+map("jk", "<esc>", {mode = "i", desc = "Esc in insert mode"})
 map("kj", "<esc>", {mode = "i", desc = "Esc in insert mode"})
 map("<enter>", "<enter><c-g>u", {mode = "i", desc = "Insert break for undo"})
 
@@ -55,8 +56,10 @@ map("n", "nzzzv", {desc = "Next match and center"})
 map("N", "Nzzzv", {desc = "Previous match and center"})
 
 map("<esc>", vim.cmd.nohlsearch, {desc = "Clear search highlight"})
-map("-", vim.cmd.Ex, {desc = "Open Netrw"})
-
+map("<leader>e", vim.cmd.Ex, {desc = "Open Netrw"})
+map("<leader>r", function()
+    vim.cmd.source(vim.fn.stdpath('config') .. '/init.lua')
+end, {desc = "reload config"})
 map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", {mode = "v", desc = "Format table"})
 
 vim.api.nvim_create_autocmd("TextYankPost", {
