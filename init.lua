@@ -77,6 +77,7 @@ vim.pack.add({
 })
 
 require("mini.comment").setup()
+require("mini.move").setup()
 require("mini.icons").setup()
 require("mini.pick").setup()
 
