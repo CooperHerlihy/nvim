@@ -57,10 +57,9 @@ map("N", "Nzzzv", {desc = "Previous match and center"})
 
 map("<esc>", vim.cmd.nohlsearch, {desc = "Clear search highlight"})
 map("<leader>e", vim.cmd.Ex, {desc = "Open Netrw"})
-map("<leader>r", function()
+map("<leader>l", function()
     vim.cmd.source(vim.fn.stdpath('config') .. '/init.lua')
 end, {desc = "reload config"})
-map("<leader>t", ":! tr -s \" \" | column -t -s '|' -o '|'<cr>", {mode = "v", desc = "Format table"})
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight on yank",
@@ -77,17 +76,21 @@ vim.pack.add({
     "https://github.com/nvim-mini/mini.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
     "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+    "https://github.com/mason-org/mason.nvim",
+    "https://github.com/neovim/nvim-lspconfig",
 })
 
 require("mini.comment").setup()
 require("mini.icons").setup()
 require("mini.pick").setup()
+require("mini.extra").setup()
 
 map("<leader>.", MiniPick.builtin.resume, {desc = "Resume search/grep"})
 map("<leader>f", MiniPick.builtin.files, {desc = "Fuzzy find files"})
 map("<leader>t", MiniPick.builtin.buffers, {desc = "Search tabs (open buffers)"})
 map("<leader>g", MiniPick.builtin.grep_live, {desc = "Grep in cwd"})
 map("<leader>h", MiniPick.builtin.help, {desc = "Search help"})
+map("<leader>d", MiniExtra.pickers.diagnostic, {desc = "Search diagnostics"})
 
 map("<leader>n", function()
     MiniPick.builtin.files(nil, {source = {cwd = "~/notes/", name = "Notes"}})
@@ -106,5 +109,19 @@ require("render-markdown").setup({
     heading = {sign = false},
     pipe_table = {border_virtual = true},
 })
+
+vim.lsp.enable("clangd")
+vim.lsp.enable("lua_ls")
+
+vim.diagnostic.config({
+    virtual_text = true,
+    severity_sort = true,
+})
+
+map("<leader>r", vim.lsp.buf.rename, {desc = "Rename (change) symbol"})
+map("<leader>a", vim.lsp.buf.code_action, {desc = "Perform LSP action"})
+map("gd", vim.lsp.buf.definition, {desc = "Goto definition"})
+
+require("mason").setup()
 
 vim.cmd.colorscheme("custom-color")
