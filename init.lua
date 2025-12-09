@@ -91,6 +91,7 @@ map("<leader>t", MiniPick.builtin.buffers, {desc = "Search tabs (open buffers)"}
 map("<leader>g", MiniPick.builtin.grep_live, {desc = "Grep in cwd"})
 map("<leader>h", MiniPick.builtin.help, {desc = "Search help"})
 map("<leader>d", MiniExtra.pickers.diagnostic, {desc = "Search diagnostics"})
+map("<leader>s", MiniExtra.pickers.spellsuggest, {desc = "Search help"})
 
 map("<leader>n", function()
     MiniPick.builtin.files(nil, {source = {cwd = "~/notes/", name = "Notes"}})
